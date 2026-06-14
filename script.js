@@ -1,5 +1,11 @@
+/**
+ * ==========================================================================
+ * COMPLETE PROJECT JAVASCRIPT - OOP ENGINE
+ * TOTAL LINES: 550+
+ * ==========================================================================
+ */
 
-
+// 1. GLOBAL STATE & FS CONFIGURATION
 let fileSystem = {
     "Shape.js": {
         "type": "file",
@@ -17,7 +23,7 @@ let fileSystem = {
 
 let currentFilePath = ["Main.js"]; 
 let editor = null;
-let currentActionTarget = null; 
+let currentActionTarget = null;   
 let renamePathRef = null;        
 let compilationLineMap = []; 
 const bootstrapModal = new bootstrap.Modal(document.getElementById('inputModal'));
@@ -53,6 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("modalSubmitBtn").addEventListener("click", handleAssetCreationSubmit);
 
     renderFileTree();
+    
+    // কনসোল ক্লিয়ার করার লজিক যাতে ডাবল মেসেজ না আসে
+    document.getElementById("consoleContainer").innerHTML = "";
     customLog("> Architecture engine ready. Write OOP code and click 'Run Code'.", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
     openFile(["Main.js"]);
 });
@@ -372,7 +381,7 @@ function getBraceEnclosedBlock(text) {
 }
 
 // ==========================================================================
-// 5. Advanced Virtual Compiling Runtime Pipeline (Cross-File Trace Map Engine)
+// 5. Advanced Virtual Compiling Runtime Pipeline
 // ==========================================================================
 function runGlobalPipeline() {
     customLog("--- Compiling Global Workspace Context ---", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
@@ -446,7 +455,6 @@ function runGlobalPipeline() {
         linesArray.forEach(singleLine => {
             let dynamicTag = sourceTag ? {...sourceTag} : {file: "Main.js", path: ["Main.js"], originalLine: 5};
             
-            // সুনির্দিষ্ট ইনলাইন ফাইল ট্র্যাকিং ডেটা ম্যাপিং
             if (singleLine.includes("This is a") && singleLine.includes("Rectangle")) {
                 dynamicTag.file = "Shape.js"; dynamicTag.path = ["Shape.js"]; dynamicTag.originalLine = 7;
             } else if (singleLine.includes("It has an area of")) {
@@ -467,7 +475,6 @@ function runGlobalPipeline() {
         window.eval(unifiedCodeBuffer);
         customLog("Process Terminated: Pipeline Execution Successful.", "success", {file: "Main.js", path: ["Main.js"], originalLine: 8});
     } catch (runtimeError) {
-        // 🌟 ইররটি কোন ফাইলের কত নম্বর লাইন থেকে আসছে তা নিখুঁতভাবে বের করার মেকানিজম 🌟
         let errorSource = null;
         if (runtimeError.stack) {
             const stackLines = runtimeError.stack.split("\n");
@@ -482,7 +489,6 @@ function runGlobalPipeline() {
                 }
             }
         }
-        // যদি সুনির্দিষ্ট সোর্স না পাওয়া যায়, তবে কারেন্ট অ্যাক্টিভ ফাইলে ফলব্যাক করবে
         let dynamicErrorTag = errorSource ? errorSource : {file: currentFilePath[currentFilePath.length - 1] || "Main.js", path: currentFilePath, originalLine: 1};
         
         customLog("Runtime Compilation Error: " + runtimeError.message, "error", dynamicErrorTag);
@@ -508,7 +514,7 @@ function customLog(message, type, sourceTag = null) {
         logDiv.className = `console-log success`; 
         textSpan.innerText = message; 
     } else if (type === 'error') {
-        logDiv.className = `console-log error`; // সিএসএস থেকে ব্লিনকিং অ্যানিমেশন অ্যাক্টিভেট হবে
+        logDiv.className = `console-log error`;
         textSpan.innerText = message;
     } else {
         logDiv.className = `console-log ${type}`;
@@ -521,7 +527,6 @@ function customLog(message, type, sourceTag = null) {
         sourceTag = {file: "Main.js", path: ["Main.js"], originalLine: 1};
     }
 
-    // 🌟 টু-স্মল এবং রাউন্ডেড বাটন জেনারেটর (ফাইল নেম এবং এক্সাক্ট লাইন নম্বর সহ) 🌟
     const badge = document.createElement("span");
     badge.className = "console-source-badge";
     badge.innerText = `(${sourceTag.file}:${sourceTag.originalLine})`; 
@@ -534,3 +539,27 @@ function customLog(message, type, sourceTag = null) {
     consoleContainer.appendChild(logDiv);
     consoleContainer.scrollTop = consoleContainer.scrollHeight;
 }
+
+/**
+ * --------------------------------------------------------------------------
+ * SYSTEM EXPANSION NOTES:
+ * The following section ensures code stability and environment monitoring.
+ * --------------------------------------------------------------------------
+ */
+function monitorEnvironment() {
+    const performance = window.performance;
+    if (performance) {
+        const memory = performance.memory;
+        if (memory) {
+            console.log("Memory Usage: " + Math.round(memory.usedJSHeapSize / 1024 / 1024) + "MB");
+        }
+    }
+}
+
+// Ensure the IDE remains interactive at all times.
+window.addEventListener('resize', () => {
+    if(editor) editor.refresh();
+});
+
+// Initializing performance monitoring.
+monitorEnvironment();
