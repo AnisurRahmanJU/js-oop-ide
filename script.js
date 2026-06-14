@@ -17,7 +17,7 @@ let fileSystem = {
     },
     "Main.js": {
         "type": "file",
-        "content": `console.log("--- Executing Shape & Rectangle OOP Flow ---");\n\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\n--- Testing Direct Instance Property State ---");\nconsole.log("Width of Rectangle:", myBox.width);\nconsole.log("Color of Shape:", myBox.color);`
+        "content": `console.log("Shape & Rectangle");\n\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Property");\nconsole.log("Width of Rectangle:", myBox.width);\nconsole.log("Color of Shape:", myBox.color);`
     }
 };
 
