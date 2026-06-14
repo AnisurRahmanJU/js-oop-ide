@@ -36,6 +36,25 @@
 }
 
 /* ==========================================================================
+   Small Console Clear Button Styling
+   ========================================================================== */
+.btn-console-clear {
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-muted) !important;
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease;
+}
+
+.btn-console-clear:hover {
+    background: var(--color-error) !important;
+    color: #ffffff !important;
+    border-color: var(--color-error) !important;
+}
+
+/* ==========================================================================
    2. Global Typography & Layout Reset
    ========================================================================== */
 * {
