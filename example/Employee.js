@@ -1,4 +1,3 @@
-```js
 // parent class  Employee.js
 class Employee {
     constructor(name, salary) {
@@ -25,4 +24,4 @@ class Manager extends Employee {
 console.log("--- Executing Employee OOP Flow ---");
 const manager = new Manager("Alice Smith", 95000, 15000);
 console.log(manager.displayDetails());
-```
+
