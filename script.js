@@ -13,7 +13,7 @@ let fileSystem = {
     },
     "Rectangle.js": {
         "type": "file",
-        "content": `// Child Class: Rectangle extending Shape\nclass Rectangle extends Shape {\n    constructor(color, width, height) {\n        super("Rectangle", color);\n        this.width = width;\n        this.height = height;\n    }\n\n    getArea() {\n        return this.width * this.height;\n    }\n\n    displayDetails() {\n        console.log(\`[Shape Analysis Mode]\`);\n        return this.describe() + \` It has an area of \` + this.getArea() + \` square units.\`;\n    }\n}`
+        "content": `// Child Class: Rectangle extending Shape\nclass Rectangle extends Shape {\n    constructor(color, width, height) {\n        super("Rectangle", color);\n        this.width = width;\n        this.height = height;\n    }\n\n    getArea() {\n        return this.width * this.height;\n    }\n\n    displayDetails() {\n        console.log(\`Shape Analysis Mode\`);\n        return this.describe() + \` It has an area of \` + this.getArea() + \` square units.\`;\n    }\n}`
     },
     "Main.js": {
         "type": "file",
