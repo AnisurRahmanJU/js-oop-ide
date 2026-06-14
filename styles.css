@@ -9,7 +9,7 @@
     --bg-navbar: #11111b;
     --bg-card: #252538;
     
-    --bg-header-dark: #0f0f16;      
+    --bg-header-dark: #0f0f16;     
     --text-header-light: #f5e0dc;   
     
     --border-color: #313244;
@@ -17,7 +17,7 @@
     --border-active: #45475a;
 
     --text-main: #cdd6f4;
-    --text-muted: #7f849c;          
+    --text-muted: #7f849c;         
     --text-sidebar: #a6adc8;
 
     /* OOP Visualizer Tokens */
@@ -107,16 +107,12 @@ body {
     align-items: center;
 }
 
-.sidebar-header span, .console-header span {
-    color: var(--text-header-light) !important;
-    font-weight: bold;
-}
-
+.sidebar-header span, .console-header span { color: var(--text-header-light) !important; font-weight: bold; }
 .editor-header span { color: #89b4fa !important; }
 .panel-header span { color: #a6e3a1 !important; }
 
 /* ==========================================================================
-   4. CodeMirror Code Editor Custom Rules
+   4. CodeMirror Code Editor
    ========================================================================== */
 .CodeMirror {
     background: var(--bg-main) !important;
@@ -131,41 +127,35 @@ body {
     border-right: 1px solid var(--border-color) !important;
 }
 
-.CodeMirror-linenumber {
-    color: var(--text-muted) !important;
-}
+.CodeMirror-linenumber { color: var(--text-muted) !important; }
 
 /* ==========================================================================
-   5. Terminal Sandbox Console Component (Pill Button Layout)
+   5. Terminal Sandbox Console Component
    ========================================================================== */
 .console-area {
     height: 220px; 
     background-color: var(--bg-navbar);
     font-size: 13px;
     padding: 12px;
-    overflow-y: auto; 
+    overflow: auto; /* Enables scrollbars */
+    white-space: nowrap; /* Forces horizontal scroll */
 }
 
 .console-log {
     margin-bottom: 6px;
-    white-space: pre-wrap;
+    white-space: nowrap; 
     border-bottom: 1px solid rgba(49, 50, 68, 0.2);
     padding-bottom: 4px;
     line-height: 1.5;
     display: flex;
-    flex-wrap: wrap; 
     align-items: center;
+    width: max-content; 
+    min-width: 100%;
 }
 
-.console-log.user-output {
-    color: var(--color-console-orange) !important;
-}
+.console-log.user-output { color: var(--color-console-orange) !important; }
+.console-log.system { color: var(--color-system) !important; }
 
-.console-log.system { 
-    color: var(--color-system) !important; 
-}
-
-/* ব্লিনকিং অ্যানিমেশন সহ কাস্টম ইরর টেক্সট */
 @keyframes errorBlink {
     0% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -180,23 +170,16 @@ body {
     animation: errorBlink 1s ease-in-out infinite; 
 }
 
-.console-log.success { 
-    color: #a6e3a1 !important; 
-    font-weight: 600;
-}
-
-.log-text {
-    word-break: break-all;
-    display: inline; 
-}
+.console-log.success { color: #a6e3a1 !important; font-weight: 600; }
+.log-text { display: inline; }
 
 /* ==========================================================================
-   6. Custom Small Pill Badge Buttons (Dynamic Color Mapping System)
+   6. Custom Small Pill Badge Buttons (Unified/Neutral)
    ========================================================================== */
 .console-source-badge {
     cursor: pointer;
-    font-size: 9.5px !important;   
-    padding: 0px 6px !important;   
+    font-size: 9.5px !important;    
+    padding: 0px 6px !important;    
     border-radius: 20px !important; 
     margin-left: 6px; 
     display: inline-flex;
@@ -205,25 +188,19 @@ body {
     white-space: nowrap;
     user-select: none;
     font-weight: 600;
-    height: 16px;                  
+    height: 16px;                   
     transition: all 0.12s ease;
+    color: var(--text-sidebar) !important;
+    background: #313244 !important;
+    border: 1px solid #45475a !important;
 }
 
-/* 🌟 ১. নরমাল ইউজার আউটপুট বাটনের ডিজাইন (Beautiful Orange Variant) 🌟 */
-.user-output .console-source-badge {
-    color: var(--color-console-orange) !important;
-    background: rgba(255, 158, 59, 0.06) !important;
-    border: 1px solid rgba(255, 158, 59, 0.3) !important;
-}
-
-.user-output .console-source-badge:hover {
-    color: #11111b !important;
-    background: var(--color-console-orange) !important;
-    border-color: var(--color-console-orange) !important;
+.console-source-badge:hover {
+    color: #ffffff !important;
+    border-color: var(--border-focus) !important;
     transform: scale(1.04);
 }
 
-/* 🌟 ২. রানটাইম ইরর বাটনের ডিজাইন (Blinking Error Color Match) 🌟 */
 .error .console-source-badge {
     color: var(--color-error) !important;
     background: rgba(243, 139, 168, 0.08) !important;
@@ -231,156 +208,38 @@ body {
 }
 
 .error .console-source-badge:hover {
-    color: #11111b !important;
+    color: #ffffff !important;
     background: var(--color-error) !important;
     border-color: var(--color-error) !important;
-    transform: scale(1.04);
-}
-
-/* ৩. সিস্টেম ও সাকসেস মেসেজ বাটন ফলব্যাক (Soft Theme) */
-.system .console-source-badge, .success .console-source-badge {
-    color: var(--text-sidebar) !important;
-    background: #313244 !important;
-    border: 1px solid #45475a !important;
-}
-
-.system .console-source-badge:hover, .success .console-source-badge:hover {
-    color: #ffffff !important;
-    border-color: var(--border-focus) !important;
 }
 
 /* ==========================================================================
-   7. Left Directory Workspace Explorer Tree
+   7. Left Directory & Right Panel
    ========================================================================== */
-.file-tree {
-    max-height: 350px;
-    overflow-y: auto;
-    padding: 12px;
-}
+.file-tree { max-height: 350px; overflow-y: auto; padding: 12px; }
+.tree-item { cursor: pointer; padding: 6px 8px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; color: var(--text-sidebar); font-size: 13px; }
+.tree-item:hover { background-color: rgba(69, 71, 90, 0.3); }
+.tree-item.active { background-color: var(--border-active); color: var(--border-focus); }
 
-.tree-item {
-    cursor: pointer;
-    padding: 6px 8px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: var(--text-sidebar);
-    font-size: 13px;
-}
-
-.tree-item:hover {
-    background-color: rgba(69, 71, 90, 0.3);
-}
-
-.tree-item.active {
-    background-color: var(--border-active);
-    color: var(--border-focus);
-}
-
-.tree-folder-content {
-    margin-left: 12px;
-    border-left: 1px dashed var(--border-active);
-    padding-left: 6px;
-}
-
-.tree-actions {
-    display: flex;
-    gap: 12px;
-    opacity: 0.25; 
-}
-
-.tree-item:hover .tree-actions {
-    opacity: 0.85; 
-}
-
-.custom-action-btn {
-    cursor: pointer;
-    color: #bac2de !important; 
-    font-size: 13px;
-}
+.visualizer-area { background-color: var(--bg-main); min-height: 350px; max-height: 600px; overflow-y: auto; padding: 12px; }
+.oop-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+.oop-class-name { font-weight: 600; color: var(--color-class); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; margin-bottom: 6px; }
 
 /* ==========================================================================
-   8. Right Panel Blueprint Map Component (Visualizer)
+   8. Scrollbar System
    ========================================================================== */
-.visualizer-area {
-    background-color: var(--bg-main);
-    min-height: 350px;
-    max-height: 600px;
-    overflow-y: auto; 
-    padding: 12px;
-}
-
-.oop-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 12px;
-}
-
-.oop-class-name {
-    font-weight: 600;
-    color: var(--color-class);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 5px;
-    margin-bottom: 6px;
-    font-size: 14px;
-}
-
-.oop-extends {
-    font-size: 11px;
-    color: var(--color-extends);
-    font-style: italic;
-}
-
-.oop-item { font-size: 12px; padding: 3px 0; }
-.oop-method { color: var(--color-method); }
-.oop-prop { color: var(--color-prop); }
-
-.empty-state {
-    text-align: center;
-    color: var(--text-muted);
-    padding: 40px 10px;
-    font-size: 13px;
-}
-
-/* Webkit Engine Layout Scrollbar System */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-navbar); }
 ::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 3px; }
 
-.footer {
-    width: 100%;
-    padding: 20px 0;
-    margin-top: 20px;
-    border-top: 1px solid var(--border-color);
-    background: var(--bg-navbar);
-    color: var(--text-muted);
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
+.footer { width: 100%; padding: 20px 0; border-top: 1px solid var(--border-color); background: var(--bg-navbar); color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+.footer-content { display: flex; justify-content: center; gap: 15px; }
 .footer-content a {
-    text-decoration: none;
+    text-decoration: none !important;
     color: inherit;
     transition: all 0.3s ease;
-    border-bottom: 1px solid transparent;
 }
 
 .footer-content a:hover {
     color: var(--color-console-orange);
-    border-bottom: 1px solid var(--color-console-orange);
-}
-
-.footer .sep {
-    color: var(--border-color);
 }
