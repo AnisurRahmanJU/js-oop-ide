@@ -1,4 +1,3 @@
-```js
 // parent class is Vehicle.js
 class Vehicle {
     constructor(make, model) {
@@ -25,4 +24,4 @@ class ElectricCar extends Vehicle {
 console.log("--- Executing Vehicle OOP Flow ---");
 const myCar = new ElectricCar("Tesla", "Model 3", 75);
 console.log(myCar.displayDetails());
-```
+
