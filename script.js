@@ -105,7 +105,21 @@ function renderFileTree() {
             const pathString = itemPath.join(",");
             const isSelected = itemPath.join("/") === currentFilePath.join("/");
 
-             if {
+            if (item.type === "folder") {
+                html += `
+                    <div class="mb-1">
+                        <div class="tree-item text-warning fw-semibold justify-content-between">
+                            <span onclick="toggleFolderView(this.parentNode)"><i class="bi bi-folder-fill me-2"></i>${key}</span>
+                            <div class="tree-actions">
+                                <i class="bi bi-pencil text-info custom-action-btn" onclick="openRenameModal(event, '${pathString}', 'folder')" title="Rename Folder"></i>
+                                <i class="bi bi-trash text-danger custom-action-btn" onclick="deleteNode(event, '${pathString}')" title="Delete Folder"></i>
+                            </div>
+                        </div>
+                        <div class="tree-folder-content">
+                            ${buildTreeHTML(item.children, itemPath)}
+                        </div>
+                    </div>`;
+            } else {
                 html += `
                     <div class="tree-item ${isSelected ? 'active' : ''}" onclick="executeFileSelection(event, '${pathString}')">
                         <span><i class="bi bi-filetype-js me-2 text-info"></i>${key}</span>
