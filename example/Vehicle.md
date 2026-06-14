@@ -1,5 +1,5 @@
 ```js
-// parent Class is Vehicle.js
+// parent class is Vehicle.js
 class Vehicle {
     constructor(make, model) {
         this.make = make;
@@ -8,7 +8,7 @@ class Vehicle {
     getInfo() { return `This is a ${this.make} ${this.model}.`; }
 }
 
-// parent Class is ElectricCar.js
+// child class is ElectricCar.js
 class ElectricCar extends Vehicle {
     constructor(make, model, batteryCapacity) {
         super(make, model);
