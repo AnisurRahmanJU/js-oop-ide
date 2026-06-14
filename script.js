@@ -50,9 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("runBtn").addEventListener("click", runGlobalPipeline);
     
-    document.getElementById("clearConsoleBtn").addEventListener("click", () => {
-        document.getElementById("consoleContainer").innerHTML = "";
-    });
+   document.getElementById('clearConsoleBtn').addEventListener('click', function() {
+    const consoleContainer = document.getElementById('consoleContainer');
+    consoleContainer.innerHTML = '<div class="console-log system">> Console cleared.</div>';
+});
     
     document.getElementById("newFileBtn").addEventListener("click", () => openAssetCreationModal('file'));
     document.getElementById("newFolderBtn").addEventListener("click", () => openAssetCreationModal('folder'));
