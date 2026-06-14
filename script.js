@@ -5,6 +5,117 @@
  * ==========================================================================
  */
 
+
+// ==========================================================================
+// 5. Advanced Virtual Compiling Runtime Pipeline (FIXED)
+// ==========================================================================
+function runGlobalPipeline() {
+    customLog("--- Compiling Global Workspace Context ---", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
+    
+    let baseClasses = "";       
+    let derivedClasses = "";    
+    let executionModules = "";  
+    
+    compilationLineMap = []; 
+    let currentLineOffset = 1;
+
+    // Helper to add code to buffer and track line numbers
+    function appendToBuffer(codeText, fileName, pathArray) {
+        const lines = codeText.split("\n");
+        const totalLines = lines.length;
+        
+        for(let l = 0; l < totalLines; l++) {
+            compilationLineMap[currentLineOffset + l] = {
+                file: fileName,
+                path: pathArray,
+                originalLine: l + 1
+            };
+        }
+        currentLineOffset += totalLines; 
+        return codeText + "\n";
+    }
+    
+    function collectModules(obj, currentPath) {
+        Object.keys(obj).forEach(key => {
+            const currentItemPath = [...currentPath, key];
+            if (obj[key].type === "folder") {
+                collectModules(obj[key].children, currentItemPath);
+            } else {
+                const fileCode = obj[key].content;
+                if (/\bextends\s+/.test(fileCode)) {
+                    derivedClasses += appendToBuffer(fileCode, key, currentItemPath);
+                } else if (/\bclass\s+\w+/.test(fileCode)) {
+                    baseClasses += appendToBuffer(fileCode, key, currentItemPath);
+                } else {
+                    executionModules += appendToBuffer(fileCode, key, currentItemPath);
+                }
+            }
+        });
+    }
+    
+    collectModules(fileSystem, []);
+    let unifiedCodeBuffer = baseClasses + "\n" + derivedClasses + "\n" + executionModules;
+
+    const originalConsoleLog = console.log;
+    
+    console.log = function(...args) {
+        const rawMessage = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(" ");
+        const linesArray = rawMessage.split("\n");
+        
+        // Find the correct file by looking at the stack trace
+        let sourceTag = null;
+        try {
+            throw new Error();
+        } catch (e) {
+            const stackLines = e.stack.split("\n");
+            // Look for the first frame that points to the eval'd code
+            for (let i = 1; i < stackLines.length; i++) {
+                const evalMatch = stackLines[i].match(/eval.*?:(\d+):(\d+)/);
+                if (evalMatch) {
+                    const evalLineNumber = parseInt(evalMatch[1], 10);
+                    if (compilationLineMap[evalLineNumber]) {
+                        sourceTag = compilationLineMap[evalLineNumber];
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Use the tag from stack trace, or default to Main.js
+        const finalTag = sourceTag || {file: "Main.js", path: ["Main.js"], originalLine: 1};
+
+        linesArray.forEach(singleLine => {
+            customLog(singleLine, 'log', finalTag);
+        });
+    };
+
+    try {
+        window.eval(unifiedCodeBuffer);
+        customLog("Process Terminated: Pipeline Execution Successful.", "success", {file: "Main.js", path: ["Main.js"], originalLine: 0});
+    } catch (runtimeError) {
+        // ... (Keep your existing catch block for errors, it's already using compilationLineMap)
+        let errorSource = null;
+        if (runtimeError.stack) {
+            const stackLines = runtimeError.stack.split("\n");
+            for(let i=0; i<stackLines.length; i++) {
+                const match = stackLines[i].match(/eval.*?:(\d+):(\d+)/);
+                if (match) {
+                    const mappedLine = parseInt(match[1], 10);
+                    if (compilationLineMap[mappedLine]) {
+                        errorSource = compilationLineMap[mappedLine];
+                        break;
+                    }
+                }
+            }
+        }
+        let dynamicErrorTag = errorSource ? errorSource : {file: "Main.js", path: ["Main.js"], originalLine: 1};
+        customLog("Runtime Compilation Error: " + runtimeError.message, "error", dynamicErrorTag);
+    } finally {
+        console.log = originalConsoleLog;
+    }
+}
+
+
 // 1. GLOBAL STATE & FS CONFIGURATION
 let fileSystem = {
     "Shape.js": {
