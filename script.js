@@ -494,9 +494,43 @@ function runGlobalPipeline() {
 }
 
 // ==========================================================================
-// 6. Custom Log Renderer (Pill Button & Error Target Injector)
+// 6. Custom Log Renderer (Clean Output)
 // ==========================================================================
 function customLog(message, type, sourceTag = null) {
+    const consoleContainer = document.getElementById("consoleContainer");
+    const logDiv = document.createElement("div");
+    
+    const textSpan = document.createElement("span");
+    textSpan.className = "log-text";
+
+    if (type === 'log') {
+        logDiv.className = `console-log user-output`; 
+        textSpan.innerText = message;
+    } else if (type === 'success') {
+        logDiv.className = `console-log success`; 
+        textSpan.innerText = message; 
+    } else if (type === 'error') {
+        logDiv.className = `console-log error`;
+        textSpan.innerText = message;
+    } else {
+        logDiv.className = `console-log ${type}`;
+        textSpan.innerText = type === 'system' ? message : `[System] ${message}`;
+    }
+    
+    logDiv.appendChild(textSpan);
+    
+    // Badge generation code removed to clean up the UI
+    
+    consoleContainer.appendChild(logDiv);
+    consoleContainer.scrollTop = consoleContainer.scrollHeight;
+}
+
+
+
+// ==========================================================================
+// 6. Custom Log Renderer (Pill Button & Error Target Injector)
+// ==========================================================================
+/* function customLog(message, type, sourceTag = null) {
     const consoleContainer = document.getElementById("consoleContainer");
     const logDiv = document.createElement("div");
     
@@ -535,6 +569,7 @@ function customLog(message, type, sourceTag = null) {
     consoleContainer.appendChild(logDiv);
     consoleContainer.scrollTop = consoleContainer.scrollHeight;
 }
+*/
 
 /**
  * --------------------------------------------------------------------------
