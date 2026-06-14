@@ -331,21 +331,37 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg-navbar); }
 ::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 3px; }
 
-/* Footer Styling */
-.footer-custom {
-    background-color: var(--bg-navbar);
+.footer {
+    width: 100%;
+    padding: 20px 0;
+    margin-top: 20px;
     border-top: 1px solid var(--border-color);
+    background: var(--bg-navbar);
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-.footer-link {
-    color: var(--text-sidebar);
-    text-decoration: none;
-    transition: color 0.3s ease;
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
-.footer-link:hover {
-    color: #ff9e3b !important; /* Orange hover color */
+.footer-content a {
     text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.footer-content a:hover {
+    color: var(--color-console-orange);
+    border-bottom: 1px solid var(--color-console-orange);
+}
+
+.footer .sep {
+    color: var(--border-color);
 }
