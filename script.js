@@ -285,7 +285,7 @@ function deleteNode(event, pathString) {
 // ==========================================================================
 // 4. Advanced OOP Structural Parsing Real-time Engine
 // ==========================================================================
-function parseAndVisualizeOOP() {
+/*function parseAndVisualizeOOP() {
     const visualizerArea = document.getElementById("visualizerArea");
     visualizerArea.innerHTML = "";
     let totalClassesFound = [];
@@ -378,7 +378,132 @@ function getBraceEnclosedBlock(text) {
         }
     }
     return text;
+}*/
+// ==========================================================================
+// 4. Advanced OOP Structural Parsing Real-time Engine (Updated)
+// ==========================================================================
+
+function extractOOPStructureFromText(codeText, fileName) {
+    const classes = [];
+    const classRegex = /\bclass\s+(\w+)(?:\s+extends\s+(\w+))?\s*\{/g;
+    let match;
+
+    while ((match = classRegex.exec(codeText)) !== null) {
+        const className = match[1];
+        const parentName = match[2] || null;
+        const startIdx = match.index;
+        const remainingText = codeText.substring(startIdx);
+        const classBlockText = getBraceEnclosedBlock(remainingText);
+        
+        // ১. Properties শনাক্তকরণ
+        const propRegex = /this\.(\w+)\s*=/g;
+        const properties = [];
+        let propMatch;
+        while ((propMatch = propRegex.exec(classBlockText)) !== null) {
+            if (!properties.includes(propMatch[1])) properties.push(propMatch[1]);
+        }
+
+        // ২. Methods, Constructor & Polymorphism শনাক্তকরণ
+        const methodRegex = /(?<!\b(if|for|while|switch|catch))\b([a-zA-Z_]\w*)\s*\([^)]*\)\s*\{/g;
+        const methods = [];
+        let methodMatch;
+        let hasConstructor = false;
+
+        while ((methodMatch = methodRegex.exec(classBlockText)) !== null) {
+            const mName = methodMatch[2];
+            if (mName === "constructor") {
+                hasConstructor = true;
+            } else if (!methods.find(m => m.name === mName)) {
+                // পলিমরফিজম: যদি parent থাকে, তবে মেথডটি সম্ভবত ওভাররাইড করা
+                methods.push({ 
+                    name: mName, 
+                    isPolymorphic: (parentName !== null) 
+                });
+            }
+        }
+
+        // ৩. Exception Handling চেক
+        const hasExceptions = /try\s*\{[\s\S]*?\}catch/g.test(classBlockText);
+
+        classes.push({ 
+            name: className, 
+            parent: parentName, 
+            properties: properties, 
+            methods: methods, 
+            hasExceptions: hasExceptions,
+            hasConstructor: hasConstructor,
+            file: fileName 
+        });
+    }
+    return classes;
 }
+
+function getBraceEnclosedBlock(text) {
+    let braceCount = 0;
+    let start = text.indexOf("{");
+    if (start === -1) return "";
+    for (let i = start; i < text.length; i++) {
+        if (text[i] === "{") braceCount++;
+        if (text[i] === "}") {
+            braceCount--;
+            if (braceCount === 0) return text.substring(start, i + 1);
+        }
+    }
+    return text;
+}
+
+function parseAndVisualizeOOP() {
+    const visualizerArea = document.getElementById("visualizerArea");
+    visualizerArea.innerHTML = "";
+    let totalClassesFound = [];
+
+    // স্ক্যানিং লজিক (পূর্বের মতোই)
+    function scanFiles(obj, currentPath) {
+        Object.keys(obj).forEach(key => {
+            const node = obj[key];
+            if (node.type === "folder") {
+                scanFiles(node.children, [...currentPath, key]);
+            } else {
+                const classes = extractOOPStructureFromText(node.content, key);
+                totalClassesFound = totalClassesFound.concat(classes);
+            }
+        });
+    }
+    scanFiles(fileSystem, []);
+
+    if (totalClassesFound.length === 0) {
+        visualizerArea.innerHTML = `<div class="empty-state"><i class="bi bi-code-slash fs-1"></i><p>No classes found.</p></div>`;
+        return;
+    }
+
+    // ভিজ্যুয়ালাইজেশন লুপ
+    totalClassesFound.forEach(cls => {
+        const card = document.createElement("div");
+        card.className = "oop-card";
+        
+        let propsHtml = cls.properties.map(p => `<div class="oop-item oop-prop"><i class="bi bi-box-seam me-1"></i> this.${p}</div>`).join("");
+        let methodsHtml = cls.methods.map(m => `
+            <div class="oop-item oop-method">
+                <i class="bi bi-lightning-charge me-1"></i> ${m.name}() 
+                ${m.isPolymorphic ? '<span class="badge bg-primary" style="font-size:8px;">Poly</span>' : ''}
+            </div>`).join("");
+
+        card.innerHTML = `
+            <div class="oop-class-name">
+                <span><i class="bi bi-bricks text-warning me-1"></i> ${cls.name}</span>
+                ${cls.parent ? `<span class="oop-extends"><i class="bi bi-arrow-up-short"></i> ${cls.parent}</span>` : ''}
+            </div>
+            <div class="small text-muted mb-1" style="font-size:10px;"><i class="bi bi-file-earmark"></i> ${cls.file}</div>
+            <div class="ps-1">
+                ${cls.hasConstructor ? '<div class="oop-item text-success"><i class="bi bi-gear me-1"></i> Constructor()</div>' : ''}
+                ${cls.hasExceptions ? '<div class="oop-item text-danger"><i class="bi bi-exclamation-triangle me-1"></i> Has Exception Handling</div>' : ''}
+                ${propsHtml}
+                <div class="border-top border-secondary my-1"></div>
+                ${methodsHtml}
+            </div>
+        `;
+        visualizerArea.appendChild(card);
+    });
 
 // ==========================================================================
 // 5. Advanced Virtual Compiling Runtime Pipeline
