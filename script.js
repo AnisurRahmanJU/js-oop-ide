@@ -5,17 +5,18 @@
 let fileSystem = {
     "Shape.js": {
         "type": "file",
-        "content": `// Parent Class: Shape\nexport default class Shape {\n    // Private properties\n    #name;\n    #color;\n\n    constructor(name, color) {\n        this.#name = name;\n        this.#color = color;\n    }\n\n    // Public getters to access private data safely\n    get name() {\n        return this.#name;\n    }\n\n    get color() {\n        return this.#color;\n    }\n\n    describe() {\n        return \`This is a \${this.#color} \${this.#name}.\`;\n    }\n}`
+        "content": `// Parent Class: Shape\nclass Shape {\n    // Private properties\n    #name;\n    #color;\n\n    constructor(name, color) {\n        this.#name = name;\n        this.#color = color;\n    }\n\n    // Public getters to access private data safely\n    get name() {\n        return this.#name;\n    }\n\n    get color() {\n        return this.#color;\n    }\n\n    describe() {\n        return \`This is a \${this.#color} \${this.#name}.\`;\n    }\n}`
     },
     "Rectangle.js": {
         "type": "file",
-        "content": `import Shape from "./Shape.js";\n\n// Child Class: Rectangle extending Shape\nexport default class Rectangle extends Shape {\n    // Private properties\n    #area;\n\n    // Exactly 2 Public Data Properties allowed\n    width;\n    height;\n\n    constructor(color, width, height) {\n        // Inherit from parent constructor\n        super("Rectangle", color);\n        \n        this.width = width;\n        this.height = height;\n        // Internal private state calculation\n        this.#area = this.width * this.height;\n    }\n\n    getArea() {\n        return this.#area;\n    }\n\n    displayDetails() {\n        console.log(\`Shape Analysis Mode:\`);\n        return this.describe() + \` It has an area of \` + this.getArea() + \` square units.\`;\n    }\n}`
+        "content": `// Child Class: Rectangle extending Shape\nclass Rectangle extends Shape {\n    // Private properties\n    #area;\n\n    // Exactly 2 Public Data Properties allowed\n    width;\n    height;\n\n    constructor(color, width, height) {\n        // Inherit from parent constructor\n        super("Rectangle", color);\n        \n        this.width = width;\n        this.height = height;\n        // Internal private state calculation\n        this.#area = this.width * this.height;\n    }\n\n    getArea() {\n        return this.#area;\n    }\n\n    displayDetails() {\n        console.log(\`Shape Analysis Mode:\`);\n        return this.describe() + \` It has an area of \` + this.getArea() + \` square units.\`;\n    }\n}`
     },
     "Main.js": {
         "type": "file",
-        "content": `import Rectangle from "./Rectangle.js";\n\nconsole.log("Executing Shape & Rectangle OOP Flow: ");\n\n// Initialize the child class instance with custom dimensions\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle (Public):", myBox.width);\nconsole.log("Color of Shape (Public Getter):", myBox.color);\n\n// Check property behavior to test encapsulation privacy\nconsole.log("Attempting to access private area directly:", myBox.area);`
+        "content": `console.log("Executing Shape & Rectangle OOP Flow: ");\n\n// Initialize the child class instance with custom dimensions\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle (Public):", myBox.width);\nconsole.log("Color of Shape (Public Getter):", myBox.color);\n\n// Check property behavior to test encapsulation privacy\nconsole.log("Attempting to access private area directly:", myBox.area);`
     }
 };
+
 
 
 
