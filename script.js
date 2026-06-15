@@ -30,14 +30,31 @@ const bootstrapModal = new bootstrap.Modal(document.getElementById('inputModal')
 // ==========================================================================
 // 2. Application Ingestion Lifecycle Initialization
 // ==========================================================================
-document.addEventListener("DOMContentLoaded", () => {
+/*document.addEventListener("DOMContentLoaded", () => {
     editor = CodeMirror.fromTextArea(document.getElementById("codeTextArea"), {
         mode: "javascript",
         theme: "dracula",
         lineNumbers: true,
         autoCloseBrackets: true,
         matchBrackets: true
-    });
+    });*/
+
+    document.addEventListener("DOMContentLoaded", () => {
+    try {
+        editor = CodeMirror.fromTextArea(document.getElementById("codeTextArea"), {
+            mode: "javascript",
+            theme: "dracula",
+            lineNumbers: true
+        });
+
+        renderFileTree();
+        openFile(["Main.js"]);
+    } catch (err) {
+        console.error("IDE Initialization Error: ", err);
+        alert("IDE লোড হতে ব্যর্থ হয়েছে! কনসোল চেক করুন।");
+    }
+});
+
 
     editor.on("change", () => {
         const activeFile = getFileByPath(currentFilePath);
