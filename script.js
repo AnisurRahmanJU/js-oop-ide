@@ -5,15 +5,15 @@
 let fileSystem = {
     "Shape.js": {
         "type": "file",
-        "content": `// Parent Class: Shape\nexport default class Shape {\n    constructor(name, color) {\n        this.name = name;\n        this.color = color;\n    }\n\n    describe() {\n        return \`This is a \${this.color} \${this.name}.\`;\n    }\n}`
+        "content": `// Parent Class: Shape\nclass Shape {\n    constructor(name, color) {\n        this.name = name;\n        this.color = color;\n    }\n\n    describe() {\n        return \`This is a \${this.color} \${this.name}.\`;\n    }\n}`
     },
     "Rectangle.js": {
         "type": "file",
-        "content": `// Child Class: Rectangle extending Shape\nexport default class Rectangle extends Shape {\n    #width;\n    #height;\n\n    constructor(color, width, height) {\n        super("Rectangle", color);\n        this.#width = width;\n        this.#height = height;\n    }\n\n    get width() {\n        return this.#width;\n    }\n\n    get height() {\n        return this.#height;\n    }\n\n    getArea() {\n        return this.#width * this.#height;\n    }\n\n    displayDetails() {\n        console.log(\`Shape Analysis Mode:\`);\n        return this.describe() + \` It has an area of \` + this.getArea() + \` square units.\`;\n    }\n}`
+        "content": `// Child Class: Rectangle extending Shape\nclass Rectangle extends Shape {\n    constructor(color, width, height) {\n        super("Rectangle", color);\n        this.width = width;\n        this.height = height;\n    }\n\n    getArea() {\n        return this.width * this.height;\n    }\n\n    displayDetails() {\n        console.log(\`Shape Analysis Mode:\`);\n        return this.describe() + \` It has an area of \` + this.getArea() + \` square units.\`;\n    }\n}`
     },
     "Main.js": {
         "type": "file",
-        "content": `console.log("Executing Shape & Rectangle OOP Flow: ");\n\n// Initialize the child class instance with custom dimensions\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle:", myBox.width);\n\n// Access the public color property safely from the parent instance\nconsole.log("Color of Shape:", myBox.color);`
+        "content": `console.log("Executing Shape & Rectangle OOP Flow: ");\n\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle:", myBox.width);\nconsole.log("Color of Shape:", myBox.color);`
     }
 };
 
