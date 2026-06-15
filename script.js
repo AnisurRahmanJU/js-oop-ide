@@ -386,7 +386,7 @@ function getBraceEnclosedBlock(text) {
 // 5. Advanced Virtual Compiling Runtime Pipeline
 // ==========================================================================
 function runGlobalPipeline() {
-    customLog("--- Compiling Global Workspace Context ---", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
+    customLog("> Compiling Global Workspace Context. Output your OOP Codes.", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
     
     let baseClasses = "";       
     let derivedClasses = "";    
