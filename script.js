@@ -13,7 +13,7 @@ let fileSystem = {
     },
     "Main.js": {
         "type": "file",
-        "content": `console.log("Executing Shape & Rectangle OOP Flow: ");\n\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle (Public):", myBox.width);\nconsole.log("Color of Shape (Public Getter):", myBox.color);\nconsole.log("Attempting to access private area directly:", myBox.area);`
+        "content": `// Main.js Log execution header to the console \nconsole.log("Executing Shape & Rectangle OOP Flow: ");\n\n// Instantiate a new Rectangle object with public dimensions and parent properties\nconst myBox = new Rectangle("Neon Blue", 10, 5);\n\n// Print the combined parent details and private child area calculations\nconsole.log(myBox.displayDetails());\n\n// Separate the output section for structural visibility\nconsole.log("\\nTesting Direct Instance Property State:");\n\n// Access the public width property directly from the child instance\nconsole.log("Width of Rectangle (Public):", myBox.width);\n\n// Access the private color property safely using the parent class public getter\nconsole.log("Color of Shape (Public Getter):", myBox.color);\n\n// Demonstrate encapsulation by attempting to access an undefined unexposed field\nconsole.log("Attempting to access private area directly:", myBox.area);`
     }
 };
 
