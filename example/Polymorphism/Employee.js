@@ -1,4 +1,4 @@
-// parent class  Employee.js
+// method overriding Polymorphism
 class Employee {
     constructor(name, salary) {
         this.name = name;
