@@ -2,7 +2,7 @@
 // 1. JS OOP IDE, Developer: Md. Anisur Rahman
 // ==========================================================================
 
-let fileSystem = {
+/*let fileSystem = {
     "Shape.js": {
         "type": "file",
         "content": `// Parent Class: Shape\nclass Shape {\n    constructor(name, color) {\n        this.name = name;\n        this.color = color;\n    }\n\n    describe() {\n        return \`This is a \${this.color} \${this.name}.\`;\n    }\n}`
@@ -15,8 +15,68 @@ let fileSystem = {
         "type": "file",
         "content": `// Load and evaluate required dependencies globally before execution\nif (typeof Shape === 'undefined') eval(fileSystem["Shape.js"].content);\nif (typeof Rectangle === 'undefined') eval(fileSystem["Rectangle.js"].content);\n\nconsole.log("Executing Shape & Rectangle OOP Flow: ");\n\n// Initialize the child class instance with custom dimensions\nconst myBox = new Rectangle("Neon Blue", 10, 5);\nconsole.log(myBox.displayDetails());\n\nconsole.log("\\nTesting Direct Instance Property State:");\nconsole.log("Width of Rectangle:", myBox.width);\nconsole.log("Color of Shape:", myBox.color);`
     }
-};
+};*/
 
+let fileSystem = {
+    "Shape.js": {
+        "type": "file",
+        "content": `// Parent Class: Shape
+class Shape {
+    constructor(name, color) {
+        this.name = name;
+        this.color = color;
+    }
+
+    describe() {
+        return \`This is a \${this.color} \${this.name}.\`;
+    }
+}`
+    },
+
+    "Rectangle.js": {
+        "type": "file",
+        "content": `// Child Class: Rectangle extending Shape
+class Rectangle extends Shape {
+    #width;
+    #height;
+
+    constructor(color, width, height) {
+        super("Rectangle", color);
+        this.#width = width;
+        this.#height = height;
+    }
+
+    get width() {
+        return this.#width;
+    }
+
+    getArea() {
+        return this.#width * this.#height;
+    }
+
+    displayDetails() {
+        console.log("Shape Analysis Mode:");
+        return this.describe() + " It has an area of " + this.getArea() + " square units.";
+    }
+}`
+    },
+
+    "Main.js": {
+        "type": "file",
+        "content": `// Load dependencies first
+
+console.log("Executing Shape & Rectangle OOP Flow: ");
+
+const myBox = new Rectangle("Neon Blue", 10, 5);
+console.log(myBox.displayDetails());
+
+console.log("\\nTesting Direct Instance Property State:");
+console.log("Width of Rectangle:", myBox.width);
+console.log("Color of Shape:", myBox.color);`
+     
+    }
+
+};
 
 
 let currentFilePath = ["Main.js"]; 
