@@ -2,9 +2,6 @@
 // 1. JS OOP IDE, Developer: Md. Anisur Rahman
 // ==========================================================================
 
-
-
-//  GLOBAL STATE & FS CONFIGURATION
 let fileSystem = {
     "Shape.js": {
         "type": "file",
@@ -26,6 +23,7 @@ let currentActionTarget = null;
 let renamePathRef = null;        
 let compilationLineMap = []; 
 const bootstrapModal = new bootstrap.Modal(document.getElementById('inputModal'));
+
 
 // ==========================================================================
 // 2. Application Ingestion Lifecycle Initialization
@@ -84,6 +82,7 @@ function getFileByPath(pathArray) {
 // ==========================================================================
 // 3. UI File System View Engine
 // ==========================================================================
+
 function renderFileTree() {
     const container = document.getElementById("fileTreeContainer");
     container.innerHTML = "";
@@ -283,8 +282,9 @@ function deleteNode(event, pathString) {
     parseAndVisualizeOOP();
 }
 
+
 // ==========================================================================
-// 4. Advanced OOP Structural Parsing Real-time Engine
+// 4. Advanced OOP Structural Parsing Real-time Engine (Pro Version)
 // ==========================================================================
 
 function parseAndVisualizeOOP() {
@@ -292,6 +292,7 @@ function parseAndVisualizeOOP() {
     visualizerArea.innerHTML = "";
     let totalClassesFound = [];
 
+    // ফাইল সিস্টেম স্ক্যান করার ফাংশন
     function scanFiles(obj, currentPath) {
         Object.keys(obj).forEach(key => {
             const node = obj[key];
@@ -306,32 +307,46 @@ function parseAndVisualizeOOP() {
     scanFiles(fileSystem, []);
 
     if (totalClassesFound.length === 0) {
-        visualizerArea.innerHTML = `
-            <div class="empty-state">
-                <i class="bi bi-code-slash fs-1 mb-2"></i>
-                <p>No valid ES6 classes identified in Workspace.</p>
-            </div>`;
+        visualizerArea.innerHTML = `<div class="empty-state">No valid ES6+ classes identified.</div>`;
         return;
     }
 
     totalClassesFound.forEach(cls => {
         const card = document.createElement("div");
         card.className = "oop-card";
-        let extendsHtml = cls.parent ? `<span class="oop-extends"><i class="bi bi-arrow-up-short"></i> extends ${cls.parent}</span>` : '';
-        let propsHtml = cls.properties.map(p => `<div class="oop-item oop-prop"><i class="bi bi-box-seam me-1"></i> this.${p}</div>`).join("");
-        let methodsHtml = cls.methods.map(m => `<div class="oop-item oop-method"><i class="bi bi-lightning-charge me-1"></i> ${m}()</div>`).join("");
+        
+        // Property Logic: # বা _ থাকলে Lock icon, অন্যথায় Open icon
+        let propsHtml = cls.properties.map(p => {
+            const isPrivate = p.name.includes('#') || p.name.includes('_');
+            return `
+            <div class="oop-item oop-prop">
+                <i class="bi ${isPrivate ? 'bi-lock-fill text-danger' : 'bi-unlock-fill text-success'} me-1"></i> 
+                ${p.name}
+            </div>`;
+        }).join("");
+        
+        // Method Logic: Badge Generation (async ও try-catch ডাইনামিক লজিক)
+        let methodsHtml = cls.methods.map(m => {
+            let badges = "";
+            if (m.isOverriding) badges += '<span class="override-tag">@override</span>';
+            if (m.isAsync) badges += '<span class="async-tag ms-1">async</span>';
+            if (m.hasCatch) badges += '<span class="catch-tag ms-1">try-catch</span>';
+            
+            return `
+            <div class="oop-item oop-method">
+                <i class="bi bi-lightning-charge me-1"></i> ${m.name} ${badges}
+            </div>`;
+        }).join("");
 
         card.innerHTML = `
             <div class="oop-class-name">
                 <span><i class="bi bi-bricks text-warning me-1"></i> ${cls.name}</span>
-                ${extendsHtml}
+                ${cls.parent ? `<span class="oop-extends">extends ${cls.parent}</span>` : ''}
             </div>
-            <div class="small text-muted mb-1" style="font-size:10px;"><i class="bi bi-file-earmark"></i> Scope: ${cls.file}</div>
-            <div class="ps-1">
-                ${propsHtml || '<div class="text-muted italic small" style="font-size:11px;">No local states detected</div>'}
-                <div class="border-top border-secondary my-1"></div>
-                ${methodsHtml || '<div class="text-muted italic small" style="font-size:11px;">No operational routines</div>'}
-            </div>
+            <div class="constructor-badge">Constructor: ${cls.constructorArgs.join(', ') || 'None'}</div>
+            <div class="ps-1">${propsHtml || '<small class="text-muted">No properties</small>'}</div>
+            <div class="border-top border-secondary my-1"></div>
+            <div class="ps-1">${methodsHtml || '<small class="text-muted">No methods</small>'}</div>
         `;
         visualizerArea.appendChild(card);
     });
@@ -345,25 +360,41 @@ function extractOOPStructureFromText(codeText, fileName) {
     while ((match = classRegex.exec(codeText)) !== null) {
         const className = match[1];
         const parentName = match[2] || null;
-        const startIdx = match.index;
-        const remainingText = codeText.substring(startIdx);
-        const classBlockText = getBraceEnclosedBlock(remainingText);
+        const classBlockText = getBraceEnclosedBlock(codeText.substring(match.index));
         
-        const propRegex = /this\.(\w+)\s*=/g;
+        // Constructor & Properties Parsing
+        const constructorMatch = /constructor\s*\(([^)]*)\)\s*\{([\s\S]*?)\}/.exec(classBlockText);
+        const constructorArgs = constructorMatch ? constructorMatch[1].split(',').map(s => s.trim()).filter(Boolean) : [];
+        const constructorBody = constructorMatch ? constructorMatch[2] : "";
+        
         const properties = [];
-        let propMatch;
-        while ((propMatch = propRegex.exec(classBlockText)) !== null) {
-            if (!properties.includes(propMatch[1])) properties.push(propMatch[1]);
+        const propRegex = /this\.([#_]\w+|\w+)\s*=/g;
+        let pMatch;
+        while ((pMatch = propRegex.exec(constructorBody)) !== null) {
+            properties.push({ name: `this.${pMatch[1]}` });
         }
 
-        const methodRegex = /(?<!\b(if|for|while|switch|catch))\b([a-zA-Z_]\w*)\s*\([^)]*\)\s*\{/g;
+        // Methods & Features Parsing
         const methods = [];
-        let methodMatch;
-        while ((methodMatch = methodRegex.exec(classBlockText)) !== null) {
-            const mName = methodMatch[2];
-            if (mName !== "constructor" && !methods.includes(mName)) methods.push(mName);
+        const methodRegex = /(async\s+)?([a-zA-Z_]\w*)\s*\([^)]*\)\s*\{([\s\S]*?)\}/g;
+        let mMatch;
+        while ((mMatch = methodRegex.exec(classBlockText)) !== null) {
+            const mName = mMatch[2];
+            const methodBody = mMatch[3];
+            
+            // কি-ওয়ার্ড ফিল্টার
+            if (!["constructor", "if", "while", "for", "switch", "catch", "else"].includes(mName)) {
+                methods.push({ 
+                    name: mName, 
+                    isOverriding: parentName !== null,
+                    // Try-Catch ডিটেকশন লজিক
+                    hasCatch: /\btry\s*\{[\s\S]*?\}\s*catch\s*\(/.test(methodBody),
+                    isAsync: !!mMatch[1] // Async কি-ওয়ার্ড চেক
+                });
+            }
         }
-        classes.push({ name: className, parent: parentName, properties: properties, methods: methods, file: fileName });
+
+        classes.push({ name: className, parent: parentName, properties, methods, constructorArgs, file: fileName });
     }
     return classes;
 }
@@ -379,12 +410,13 @@ function getBraceEnclosedBlock(text) {
             if (braceCount === 0) return text.substring(start, i + 1);
         }
     }
-    return text;
-} 
+    return "";
+}
 
 // ==========================================================================
 // 5. Advanced Virtual Compiling Runtime Pipeline
 // ==========================================================================
+
 function runGlobalPipeline() {
     customLog("> Compiling Global Workspace Context. Orange text is output of code.", "system", {file: "Main.js", path: ["Main.js"], originalLine: 1});
     
@@ -502,6 +534,7 @@ function runGlobalPipeline() {
 // ==========================================================================
 // 6. Custom Log Renderer (Clean Output)
 // ==========================================================================
+
 function customLog(message, type, sourceTag = null) {
     const consoleContainer = document.getElementById("consoleContainer");
     const logDiv = document.createElement("div");
@@ -532,12 +565,11 @@ function customLog(message, type, sourceTag = null) {
 }
 
 
-/**
- * --------------------------------------------------------------------------
- * SYSTEM EXPANSION NOTES:
- * The following section ensures code stability and environment monitoring.
- * --------------------------------------------------------------------------
- */
+
+  // =========================================================================
+ //The following section ensures code stability and environment monitoring.
+//============================================================================
+ 
 function monitorEnvironment() {
     const performance = window.performance;
     if (performance) {
@@ -548,10 +580,12 @@ function monitorEnvironment() {
     }
 }
 
+
 // Ensure the IDE remains interactive at all times.
 window.addEventListener('resize', () => {
     if(editor) editor.refresh();
 });
+
 
 // Initializing performance monitoring.
 monitorEnvironment();
