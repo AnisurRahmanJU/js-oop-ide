@@ -6,6 +6,7 @@ let fileSystem = {
     "Shape.js": {
         "type": "file",
         "content": `// Parent Class: Shape.js
+// if export need, the code would be - export classs Shape
 class Shape {
     constructor(name, color) {
         this.name = name;
@@ -21,6 +22,7 @@ class Shape {
     "Rectangle.js": {
         "type": "file",
         "content": `// Child Class: Rectangle.js 
+// if export need, the code would be - export classs Rectangle extends Shape
 class Rectangle extends Shape {
     #width;
     _height;
