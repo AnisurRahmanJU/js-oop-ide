@@ -48,7 +48,9 @@ class Rectangle extends Shape {
 
     "Main.js": {
         "type": "file",
-        "content": `// import files\neval(fileSystem["Shape.js"].content);\neval(fileSystem["Rectangle.js"].content);\n\n// Main.js -> Main Function
+        "content": `// import { Shape } from 'import link use/Shape.js';
+\n// import { Rectangle } from 'import link use/Rectangle.js';
+\n\n// Main.js -> Main Function
 console.log("Executing Shape & Rectangle OOP Flow: ");
 
 const myBox = new Rectangle("Neon Blue", 10, 5);
